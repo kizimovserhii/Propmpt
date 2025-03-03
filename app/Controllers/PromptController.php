@@ -4,35 +4,46 @@ namespace app\Controllers;
 
 use app\Services\CategoryService;
 use app\Services\PromptService;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class PromptController
 {
     protected PromptService $promptService;
     protected CategoryService $categoryService;
+    protected TwigController $twigController;
 
     public function __construct()
     {
         $this->promptService = new PromptService();
         $this->categoryService = new CategoryService();
+        $this->twigController = new TwigController();
     }
 
     /**
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function index(): void
     {
         $prompts = $this->promptService->getAllPrompts();
 
-        include 'app/views/prompts/index.php';
+        $this->twigController->render('prompts/index', ['prompts' => $prompts]);
     }
 
     /**
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function create(): void
     {
         $categories = $this->categoryService->getCategories();
-        include 'app/views/prompts/create.php';
+        $this->twigController->render('prompts/create', ['categories' => $categories]);
     }
 
     /**
@@ -46,39 +57,50 @@ class PromptController
             'category_id' => $_POST['category_id'],
         ];
 
-        $promptId = $this->promptService->createPrompt($data);
+        $this->promptService->createPrompt($data);
 
-        include 'app/views/prompts/show.php';
-        header('Location: /prompts/' . $id);
+        header('Location: /prompts/');
         exit;
     }
 
     /**
      * @param int $id
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function show(int $id): void
     {
         $prompt = $this->promptService->getById($id);
 
-        include 'app/views/prompts/show.php';
+        $this->twigController->render('prompts/show', ['prompt' => $prompt]);
     }
 
     /**
      * @param int $id
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function edit(int $id): void
     {
         $categories = $this->categoryService->getCategories();
         $prompt = $this->promptService->getById($id);
 
-        include 'app/views/prompts/edit.php';
+        $this->twigController->render('prompts/edit', [
+            'categories' => $categories,
+            'prompt' => $prompt
+        ]);
     }
 
     /**
      * @param int $id
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function update(int $id): void
     {
@@ -86,6 +108,7 @@ class PromptController
             $data = [
                 'title' => $_POST['title'],
                 'body' => $_POST['body'],
+                'category_id' => $_POST['category_id'],
             ];
 
             $this->promptService->update($id, $data);
@@ -94,9 +117,13 @@ class PromptController
             exit;
         }
 
+        $categories = $this->categoryService->getCategories();
         $prompt = $this->promptService->getById($id);
 
-        include 'app/views/prompts/edit.php';
+        $this->twigController->render('prompts/edit', [
+            'categories' => $categories,
+            'prompt' => $prompt
+        ]);
     }
 
     /**

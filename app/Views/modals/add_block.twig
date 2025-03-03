@@ -1,0 +1,34 @@
+<div id="addBlockModal" class="modal-header fixed top-8 left-1/2 transform -translate-x-1/2 bg-white p-6 rounded-lg shadow-lg w-full max-w-md z-50">
+    <div id="categoryForm" class="mb-4">
+        <div class="modal-content bg-white p-6 rounded-lg w-96 relative">
+            <button id="closeModal" class="close-btn absolute top-2 right-2 text-gray-700 hover:text-red-500 text-2xl font-bold">
+                &times;
+            </button>
+        </div>
+        <div class="mb-4">
+            <label for="categoryId">Select Category</label>
+            <select name="category_id" id="categoryId" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required="">
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}">{{ category.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="mb-4">
+        <h1 class="text-2xl font-bold mb-6 text-center">Select Builder</h1>
+        <div id="PromptsContainer" class="mt-6 mb-6 space-y-4">
+            {% for prompt in prompts %}
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4">
+                    <h2 class="text-lg font-semibold">
+                        <a href="#" class="add-prompt text-gray-800" data-id="{{ prompt.id }}" data-title="{{ prompt.title }}" data-body="{{ prompt.body }}">
+                            {{ prompt.title }}
+                        </a>
+                    </h2>
+                    <p class="text-gray-700 mt-2">{{ prompt.body }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+

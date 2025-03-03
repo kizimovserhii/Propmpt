@@ -16,9 +16,20 @@ class CategoryService
     /**
      * @return array
      */
-    public function getCategories()
+    public function getCategories(): array
     {
         $stmt = $this->db->query('SELECT * FROM categories');
+        return $stmt->fetchAll();
+    }
+
+    /**
+     * @param $categoryId
+     * @return array
+     */
+    public function getPromptsByCategory($categoryId): array
+    {
+        $stmt = $this->db->prepare('SELECT * FROM prompts WHERE category_id = ?');
+        $stmt->execute([$categoryId]);
         return $stmt->fetchAll();
     }
 }

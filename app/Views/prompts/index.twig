@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Prompts</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-7xl mx-auto">
+    <div class="flex mb-10 items-center mt-5">
+        <div class="flex mb-10 items-center mt-5 w-full justify-between">
+            <a href="/" class="inline-block bg-blue-500 text-white rounded-lg px-4 py-2 whitespace-nowrap hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                Prompts Builder
+            </a>
+            <div class="flex items-center w-full justify-end gap-5">
+            <span class="welcome-text text-gray-700">Welcome!</span>
+            <form method="POST" action="/api/logout">
+                <button type="submit" class="inline-block bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                    Logout
+                </button>
+            </form>
+            </div>
+        </div>
+    </div>
+    <h1 class="text-3xl font-semibold text-gray-800 mb-6 text-center"> AI Prompts </h1>
+    <div class="">
+        {% if prompts is not empty %}
+            {% for prompt in prompts %}
+                <div class="bg-gray-50 p-4 rounded-lg shadow-md mb-6">
+                    <h2 class="text-xl font-semibold text-gray-800 mb-4">
+                        <a href='/prompts/{{ prompt.id }}'
+                           class='text-gray-800 hover:underline' style='text-decoration: none;'>
+                            {{ prompt.title }}
+                        </a>
+                    </h2>
+                    <p class="text-gray-600 mb-4">{{ prompt.body }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p class="text-center text-gray-600">No prompts available.</p>
+        {% endif %}
+    </div>
+    <div>
+        <a href="/prompts/create" class="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+            Add Prompt
+        </a>
+    </div>
+</div>
+</body>
+</html>

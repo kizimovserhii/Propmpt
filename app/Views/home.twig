@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Prompts Builder</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+    <link href="/src/custom.css" rel="stylesheet">
+</head>
+<body>
+<div id="app">
+    <div class="min-h-screen bg-gray-100 responsive-container">
+        <div class="flex items-center justify-center h-full responsive-margin">
+            {% if not isLoggedIn %}
+                <div class="flex w-full responsive-space justify-center">
+                    <a href="/login" class="inline-block responsive-button bg-blue-500 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">
+                        Login
+                    </a>
+                    <a href="/register" class="inline-block responsive-button bg-green-500 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-opacity-50">
+                        Register
+                    </a>
+                </div>
+            {% else %}
+                <div class="flex w-full responsive-space items-center">
+                    <div class="flex responsive-space justify-center">
+                        <a href="/prompts" class="inline-block bg-blue-500 text-white rounded-lg px-4 py-2 whitespace-nowrap hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                            Create Prompts
+                        </a>
+                    </div>
+                    <div class="flex w-full responsive-space items-center justify-center">
+                        <span class="welcome-text text-gray-700">Welcome!</span>
+                        <form method="POST" action="/api/logout">
+                            <button type="submit" class="inline-block responsive-button bg-red-500 text-white rounded-lg px-6 py-2 text-lg font-semibold hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 transition duration-200 ease-in-out">
+                                Logout
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <h1 class="font-semibold text-gray-800 text-center prompt-title">AI Prompt Builder</h1>
+        <div id="PromptsList" class="prompt-list"></div>
+        <div class="text-center mb-5">
+            <button id="addBlockBtn" class="inline-block text-white add-button rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Add Block</button>
+        </div>
+        <div id="promptsPreview"></div>
+    </div>
+    {% include 'modals/add_block.twig' %}
+</div>
+    <script src="vendor/components/jquery/jquery.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+    <script src="js/script.js"></script>
+</body>
+</html>

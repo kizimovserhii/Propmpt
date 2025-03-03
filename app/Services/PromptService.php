@@ -27,7 +27,7 @@ class PromptService
      * @param int $id
      * @return mixed
      */
-    public function getById(int $id)
+    public function getById(int $id): array
     {
         $query = "
         SELECT p.*, c.title AS category_title
@@ -43,9 +43,9 @@ class PromptService
 
     /**
      * @param array $data
-     * @return false|string
+     * @return bool
      */
-    public function createPrompt(array $data)
+    public function createPrompt(array $data): bool
     {
         $stmt = $this->db->prepare("INSERT INTO prompts (title, body, category_id) VALUES (?, ?, ?)");
         $stmt->execute([$data['title'], $data['body'], $data['category_id']]);
@@ -58,10 +58,10 @@ class PromptService
      * @param array $data
      * @return mixed
      */
-    public function update(int $id, array $data)
+    public function update(int $id, array $data): bool
     {
-        $stmt = $this->db->prepare("UPDATE prompts SET title = ?, body = ? WHERE id = ?");
-        $stmt->execute([$data['title'], $data['body'], $id]);
+        $stmt = $this->db->prepare("UPDATE prompts SET title = ?, body = ?, category_id = ? WHERE id = ?");
+        $stmt->execute([$data['title'], $data['body'], $data['category_id'], $id]);
 
         return $stmt->fetch();
     }
@@ -70,9 +70,46 @@ class PromptService
      * @param int $id
      * @return void
      */
-    public function delete(int $id)
+    public function delete(int $id): void
     {
         $stmt = $this->db->prepare("DELETE FROM prompts WHERE id = ?");
         $stmt->execute([$id]);
+    }
+
+    /**
+     * @param array $promptIds
+     * @return array
+     */
+    public function getPrompts(array $promptIds): array
+    {
+        $IdsString = implode(',', $promptIds);
+
+        $sql = "SELECT * FROM prompts WHERE id IN ($IdsString)";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        $prompts = $stmt->fetchAll();
+
+        return $this->sortPrompts($prompts, $promptIds);
+    }
+
+    /**
+     * @param array $prompts
+     * @param array $promptIds
+     * @return array
+     */
+    private function sortPrompts(array $prompts, array $promptIds): array
+    {
+        $sortPrompts = [];
+        foreach ($promptIds as $promptId) {
+            foreach ($prompts as $prompt) {
+                if ($prompt['id'] == $promptId) {
+                    $sortPrompts[] = $prompt;
+                }
+            }
+        }
+
+        return $sortPrompts;
     }
 }

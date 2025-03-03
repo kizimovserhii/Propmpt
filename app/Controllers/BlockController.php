@@ -2,46 +2,75 @@
 
 namespace app\Controllers;
 
+use app\Services\AuthService;
 use app\Services\CategoryService;
-use app\Services\BlockService;
 
-class BlockController{
+use app\Services\PromptService;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
+
+class BlockController
+{
     protected CategoryService $categoryService;
-    protected BlockService $blockService;
+    protected PromptService $promptService;
+    protected TwigController $twigController;
+    protected AuthService $authService;
 
     public function __construct()
     {
         $this->categoryService = new CategoryService();
-        $this->blockService = new BlockService();
+        $this->twigController = new TwigController();
+        $this->authService = new AuthService();
+        $this->promptService = new PromptService();
     }
 
     /**
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function home(): void
     {
-        $prompts = $this->blockService->getPromptsFromSession();
-        include 'app/views/home.php';
+        $isLoggedIn = $this->authService->checkSession();
+        $userName = $isLoggedIn ? $this->authService->getUserName() : '';
+        $categories = $this->categoryService->getCategories();
+
+        $this->twigController->render('home', [
+            'isLoggedIn' => $isLoggedIn,
+            'name' => $userName,
+            'categories' => $categories
+        ]);
     }
 
     /**
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
-    public function block(): void
+    public function getAllPromptByCategory(): void
     {
-        $prompts = $this->blockService->getPrompts();
-        include 'app/views/block.php';
+        $categoryId = $_POST['category_id'] ?? null;
+        $prompts = $this->categoryService->getPromptsByCategory($categoryId);
+        $this->twigController->render('include/category_block', ['prompts' => $prompts]);
     }
 
-    public function addPrompt(): void
+    /**
+     * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
+     */
+    public function updatePrompts(): void
     {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $input = json_decode(file_get_contents('php://input'), true);
-            $promptId = $input['id'];
+        if (isset($_POST['prompts']) && is_array($_POST['prompts']) && count($_POST['prompts']) > 0) {
+            $promptIds = $_POST['prompts'];
 
-            $this->blockService->addPrompt($promptId);
-            echo json_encode(['success' => true]);
+            $prompt = $this->promptService->getPrompts($promptIds);
+
+            $this->twigController->render('include/prompts_list', ['prompts' => $prompt,]);
         }
     }
-
 }

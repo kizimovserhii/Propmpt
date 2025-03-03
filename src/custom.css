@@ -1,0 +1,117 @@
+#addBlockModal {
+    display: none;
+}
+
+@media (max-width: 480px) {
+    .responsive-container {
+        padding: 16px;
+    }
+
+    .responsive-margin {
+        margin-bottom: 40px;
+    }
+
+    .responsive-button {
+        padding: 6px 16px;
+    }
+
+    .responsive-space {
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .welcome-text {
+        font-size: 16px;
+    }
+
+    .add-button {
+        padding: 12px 24px;
+        background-color: #ffffff;
+    }
+
+    .prompt-title {
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+
+    .prompt-list {
+        margin-top: 24px;
+    }
+}
+
+@media (min-width: 481px) and (max-width: 1279px) {
+    .responsive-container {
+        padding: 24px;
+    }
+
+    .responsive-margin {
+        margin-bottom: 60px;
+    }
+
+    .responsive-button {
+        padding: 7px 20px;
+    }
+
+    .responsive-space {
+        justify-content: center;
+        gap: 12px;
+    }
+
+    .welcome-text {
+        font-size: 18px;
+    }
+
+    .add-button{
+        padding: 12px 32px;
+        background-color: #3B82F6;
+    }
+
+    .prompt-title {
+        font-size: 28px;
+        margin-bottom: 20px;
+    }
+
+    .prompt-list {
+        margin-top: 32px;
+    }
+}
+
+@media (min-width: 1280px)
+{
+
+    .responsive-container {
+        padding: 20px;
+    }
+
+    .responsive-margin {
+        margin-bottom: 60px;
+    }
+
+    .responsive-button {
+        padding: 8px 24px;
+    }
+
+    .responsive-space {
+        justify-content: flex-end;
+        gap: 16px;
+    }
+
+    .welcome-text {
+        font-size: 20px;
+    }
+
+    .add-button{
+        padding: 16px 48px;
+        background-color: #1D4ED8;
+    }
+
+    .prompt-title {
+        font-size: 32px;
+        margin-bottom: 24px;
+    }
+
+    .prompt-list {
+        margin-top: 40px;
+    }
+}
+

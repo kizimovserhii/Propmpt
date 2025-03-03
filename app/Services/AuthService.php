@@ -13,8 +13,13 @@ class AuthService
         $this->db = new DbController();
     }
 
-
-    public function registerUser($name, $email, $password)
+    /**
+     * @param $name
+     * @param $email
+     * @param $password
+     * @return false|string
+     */
+    public function registerUser($name, $email, $password): false|string
     {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ?');
         $stmt->execute([$email]);
@@ -32,8 +37,12 @@ class AuthService
         return $this->db->lastInsertId();
     }
 
-
-    public function loginUser($email, $password)
+    /**
+     * @param $email
+     * @param $password
+     * @return string|true
+     */
+    public function loginUser($email, $password): string|true
     {
         $stmt = $this->db->prepare('SELECT * FROM users WHERE email = ?');
         $stmt->execute([$email]);
@@ -48,15 +57,33 @@ class AuthService
         }
 
         $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['name'];
 
         return true;
     }
 
     /**
+     * @return bool
+     */
+    public function checkSession(): bool
+    {
+        return isset($_SESSION['user_id']);
+    }
+
+    /**
+     * @return string
+     */
+    public function getUserName(): string
+    {
+        return $_SESSION['name'] ?? '';
+    }
+
+    /**
      * @return void
      */
-    public function logoutUser(): void
+    public function logout(): void
     {
+        session_unset();
         session_destroy();
     }
 }

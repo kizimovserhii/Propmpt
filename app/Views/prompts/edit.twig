@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AI Prompt Edit</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="bg-white p-8 rounded-lg shadow-lg w-full max-w-md mx-auto mt-10">
+    <div class="flex items-center mb-10 mt-5">
+        <div class="flex items-center w-full justify-end gap-5">
+            <span class="welcome-text text-gray-700">Welcome!</span>
+            <form method="POST" action="/api/logout">
+                <button type="submit" class="inline-block bg-red-500 text-white rounded-lg px-4 py-2 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50">
+                    Logout
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <h1 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Edit Prompt</h1>
+
+    <form action="/api/prompts/{{ prompt.id }}" method="POST">
+        <input type="hidden" name="_method" value="PUT">
+
+        <div class="mb-4">
+            <label for="title" class="block text-gray-700 text-sm font-medium mb-2">Title</label>
+            <input
+                    type="text"
+                    name="title"
+                    id="title"
+                    value="{{ prompt.title }}"
+                    placeholder="Prompt title"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required>
+        </div>
+        <div class="mb-4">
+            <label for="body" class="block text-gray-700 text-sm font-medium mb-2">Body</label>
+            <textarea
+                    name="body"
+                    id="body"
+                    rows="4"
+                    class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    required>{{ prompt.body }}</textarea>
+        </div>
+        <div class="mb-4">
+            <label for="category_id" class="block text-gray-700 text-sm font-medium mb-2">Category</label>
+            <select name="category_id" id="category_id" class="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500" required>
+                <option value="">Select Category</option>
+                {% for category in categories %}
+                    <option value="{{ category.id }}" {% if category.id == prompt.category_id %}selected{% endif %}>{{ category.title }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit" class="inline-block bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50">Update Prompt</button>
+    </form>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{% for prompt in prompts %}
+<div id="prompts" class="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-4 prompts" data-id="{{ prompt.id }}" data-title="{{ prompt.title }}" data-body="{{ prompt.body }}">
+    <h2 class="text-lg font-semibold">
+        <a href="#" class="add-prompt text-gray-800 cursor-pointer">
+            {{ prompt.title }}
+        </a>
+    </h2>
+    <p class="text-gray-700 mt-2">{{ prompt.body }}</p>
+</div>
+{% endfor %}

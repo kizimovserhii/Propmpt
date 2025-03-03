@@ -3,22 +3,30 @@
 namespace app\Controllers;
 
 use app\Services\AuthService;
+use Twig\Error\LoaderError;
+use Twig\Error\RuntimeError;
+use Twig\Error\SyntaxError;
 
 class AuthController
 {
     private AuthService $authService;
+    protected TwigController $twigController;
 
     public function __construct()
     {
         $this->authService = new AuthService();
+        $this->twigController = new TwigController();
     }
 
     /**
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function showRegisterForm(): void
     {
-        include 'app/views/users/register.php';
+        $this->twigController->render('users/register');
     }
 
     /**
@@ -36,17 +44,20 @@ class AuthController
             $_SESSION['auth'] = true;
             $_SESSION['user_id'] = $userId;
 
-            header("Location: /");
+            header("Location: /prompts");
             exit;
         }
     }
 
     /**
      * @return void
+     * @throws LoaderError
+     * @throws RuntimeError
+     * @throws SyntaxError
      */
     public function showLoginForm(): void
     {
-        include 'app/views/users/login.php';
+        $this->twigController->render('users/login');
     }
 
     /**
@@ -64,13 +75,13 @@ class AuthController
                 return;
             }
 
-            $result = $this->authService->loginUser($email, $password);
+            $loginResult = $this->authService->loginUser($email, $password);
 
-            if ($result === true) {
-                header('Location: /');
+            if ($loginResult === true) {
+                header('Location: /prompts');
                 exit;
             } else {
-                echo $result;
+                echo $loginResult;
             }
         }
     }
@@ -78,19 +89,10 @@ class AuthController
     /**
      * @return void
      */
-    public function logout()
+    public function logout(): void
     {
-        $this->authService->logoutUser();
-
-        header("Location: /login");
-        exit();
+        $this->authService->logout();
+        header('Location: /');
+        exit;
     }
-
-//    public function checkAuth()
-//    {
-//        if (isset($_SESSION['auth']) && $_SESSION['auth'] === true) {
-//            return true;
-//        }
-//        return false;
-//    }
 }
